@@ -1,5 +1,3 @@
-var sleep = require('sleep');
-
 module.exports = function(app, passport, Poll) {
 
 	// HOMEPAGE
@@ -171,7 +169,10 @@ module.exports = function(app, passport, Poll) {
 			poll.markModified('votes'); // informs Mongoose that something has changed so it saves it; doesn't check arrays by default?
 		    poll.save(function (err) {
 				if (err) return console.error(err);
-				else console.log('Successful vote.');
+				else {
+					console.log('Successful vote.');
+					res.end();
+				}
 		    });
 		});
 	});
@@ -191,7 +192,14 @@ module.exports = function(app, passport, Poll) {
 
 	// RESULTS PAGE
 	app.get('/:id/r', (req, res) => {
-		res.end();
+		Poll.findOne({identifier: req.params.id}, (err, poll) => {
+			res.render('results', {
+				question: poll.question,
+				choices: poll.choices,
+				votes: poll.votes,
+				id: '/' + req.params.id
+			});
+		});
 	});
 
 }

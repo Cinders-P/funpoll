@@ -1,0 +1,110 @@
+doctype html
+html(lang="en")
+	include ./head.pug
+	// Custom Sheets
+	link(rel="shortcut icon" type="image/png" href="../favicon.png")
+	link(rel='stylesheet', type='text/css', href='../home.css')
+	script(src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.js")
+	
+	body
+	.red
+	.svg
+	.svg
+	.jumbotron.text-xs-center
+		img(src='../smiley.png')
+		a(href="/")
+			h1.display-1 funpoll
+		div.bottom
+			a(href='/login') Login
+			span.pad |
+			a(href='/register') Register
+	.container-fluid.no-pad
+		.arrow-up
+		.justify-center
+			canvas(id="myPieChart" width="400" height="400")
+			script.
+				var c = !{JSON.stringify(choices)};
+				var v = !{JSON.stringify(votes)};
+				var empty = true;
+				for (prop in v) {
+					if (v[prop] !== 0) {
+						empty = false;
+					}
+				}
+				
+				if (!empty) {
+					$('html, body').css('overflow-y', 'visible');
+					var ctx = document.getElementById("myPieChart");
+					var data = {
+						labels: c,
+						datasets: [
+							{
+								data: v,
+								backgroundColor: [
+									"#f44336",
+									"#E91E63",
+									"#9C27B0",
+									"#673AB7",
+									"#3F51B5",
+									"#2196F3",
+									"#03A9F4",
+									"#00BCD4",
+									"#009688",
+									"#4CAF50",
+									"#8BC34A",
+									"#CDDC39",
+									"#FFEB3B",
+									"#FFC107",
+									"#FF9800",
+									"#FF5722",
+									"#1B5E20",
+									"#1A237E",
+									"#880E4F",
+									"#b71c1c",
+								],
+								hoverBackgroundColor: [
+									"#ef5350",
+									"#EC407A",
+									"#AB47BC",
+									"#7E57C2",
+									"#5C6BC0",
+									"#42A5F5",
+									"#29B6F6",
+									"#26C6DA",
+									"#26A69A",
+									"#66BB6A",
+									"#9CCC65",
+									"#D4E157",
+									"#FFEE58",
+									"#FFCA28",
+									"#FFA726",
+									"#FF7043",
+									"#1B5E20",
+									"#1A237E",
+									"#880E4F",
+									"#b71c1c",
+								]
+							}]
+						};
+					// For a pie chart
+					var myPieChart = new Chart(ctx,{
+						type: 'pie',
+						data: data
+					});
+				}
+
+			table.table
+				thead.thead-inverse
+					tr
+						th=question
+						th
+				tbody
+					each val, index in choices
+						tr
+							td=val
+							td=votes[index]
+
+					tr
+						th 
+							a.brown(href=id) Back to voting
+							

@@ -26,7 +26,6 @@ $(function() {
 				if (res === "true")
 					$('.alert').fadeIn();
 				else
-				// window.location = '/';
 					window.location = window.location.pathname + '/r';
 			});
 		}
