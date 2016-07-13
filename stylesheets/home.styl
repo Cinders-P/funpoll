@@ -15,6 +15,43 @@ a[href='/']
 	color:white
 	text-decoration none
 
+.flex-row
+	display:flex
+	flex-wrap: wrap;
+	justify-content: flex-end;
+	width: 100%
+
+.glow
+	box-shadow 0 0 10px rgba(70, 250, 99, 0.5)
+
+button.col-lg-2:first-of-type
+	margin-top:2rem
+
+.flex-column
+	display: flex;
+	flex-direction column
+
+button.form-control
+	word-wrap:break-word;
+	margin: 0.5rem
+	width:auto;
+	max-width: 500px
+	transition: background-color 0.3s ease
+
+button.form-control:hover
+	background-color: rgb(237, 244, 230)
+
+button.form-control:focus
+	border-color rgba(45, 106, 55, 0.5)
+
+.margin-top1
+	margin-top: 1rem
+
+input[name='add']
+	min-width: 200px
+	max-width: 400px
+	margin-left:  0.5rem
+
 .red
 	top:0
 	position: absolute;
@@ -31,7 +68,6 @@ a[href='/']
 	z-index: 2
 	// border-bottom: 5px solid rgba(#4d3f2b, 0.5)
 	border-top: 10px solid rgba(#4d3f2b, 0.5)
-	opacity: 0
 
 .form-group .form-group
 	display:flex
@@ -46,12 +82,16 @@ div.svg
 	mix-blend-mode: soft-light
 	z-index: -1
 
+.display-3
+	font-size: 3.7rem
+
 .display-1
 	position: relative;
 	font-family:Work Sans
 	font-weight: 700
 	color:#FFF
 	z-index: 1
+
 
 #form-footer
 	display:flex
@@ -60,7 +100,6 @@ div.svg
 .pull-xs-left input
 	margin-top:10px !important
 	margin-right: 10px !important
-
 
 .checkbox
 	margin-bottom: 0px !important
@@ -73,8 +112,8 @@ h2
 	text-align: right
 
 .container-fluid
-	min-width: 100vw
-	padding:3rem 6rem 0 6rem
+	width: 100vw
+	padding:3rem 9rem 0 6rem
 	position: relative
 	background-color: #E7F3EF
 	z-index: 3
@@ -88,6 +127,11 @@ input.form-control
 input:required {
     box-shadow:none;
 }
+
+.trans
+	background-color: transparent;
+	border:none
+	min-height: 300px !important
 
 .pad
 	margin-left: 0.5rem
@@ -196,18 +240,24 @@ img[src='smiley.png']
 		min-width:335px
 	.card
 		padding:1rem
-		min-height: 470px
+		min-height: 400px
 	.form-group
 		margin-right: 20px
 
 @media (max-width: 48em)
 	.container-fluid
-		padding:2rem
+		padding:2em
 	.arrow-up
 		display:none
 	.card
 		min-height: 500px
-
+		width: 100vw
+	.display-3
+		font-size: 3rem
+	.flex-column
+		width: 85vw
+	.pull-xs-right
+		margin-right: 0
 
 div.arrow-up
 	height:0

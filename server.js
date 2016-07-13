@@ -35,6 +35,7 @@ app.use(stylus.middleware({
 	compile: compile,
 }));
 app.use(express.static('public')); //now accessable from base url
+app.enable('trust proxy'); //allows use of req.ip or req.ips to grab client ip
 
 require('./config/passport')(passport);
 

@@ -5,27 +5,19 @@ module.exports = function(app, passport, Poll) {
 	// HOMEPAGE
 	app.get('/', (req, res) => {
 		Poll.find().sort({"timestamp": -1}).limit(10).exec((err, polls) => {
+			var qArr = [],
+				dArr = [],
+				iArr = [];
+			for (var z = 0; z < 10; z++) {
+				iArr.push(polls[z].identifier);
+				qArr.push(polls[z].question);
+				dArr.push(polls[z].timestamp.toLocaleDateString('en-US', {hour:'numeric', minute:'2-digit', weekday:'short'}));
+			}
+
 			res.render('index.pug', {
-				q0: polls[0].question,
-				d0: polls[0].timestamp.toLocaleDateString('en-US', {hour:'numeric', minute:'2-digit', weekday:'short'}),
-				q1: polls[1].question,
-				d1: polls[1].timestamp.toLocaleDateString('en-US', {hour:'numeric', minute:'2-digit', weekday:'short'}),
-				q2: polls[2].question,
-				d2: polls[2].timestamp.toLocaleDateString('en-US', {hour:'numeric', minute:'2-digit', weekday:'short'}),
-				q3: polls[3].question,
-				d3: polls[3].timestamp.toLocaleDateString('en-US', {hour:'numeric', minute:'2-digit', weekday:'short'}),
-				q4: polls[4].question,
-				d4: polls[4].timestamp.toLocaleDateString('en-US', {hour:'numeric', minute:'2-digit', weekday:'short'}),
-				q5: polls[5].question,
-				d5: polls[5].timestamp.toLocaleDateString('en-US', {hour:'numeric', minute:'2-digit', weekday:'short'}),
-				q6: polls[6].question,
-				d6: polls[6].timestamp.toLocaleDateString('en-US', {hour:'numeric', minute:'2-digit', weekday:'short'}),
-				q7: polls[7].question,
-				d7: polls[7].timestamp.toLocaleDateString('en-US', {hour:'numeric', minute:'2-digit', weekday:'short'}),
-				q8: polls[8].question,
-				d8: polls[8].timestamp.toLocaleDateString('en-US', {hour:'numeric', minute:'2-digit', weekday:'short'}),
-				q9: polls[9].question,
-				d9: polls[9].timestamp.toLocaleDateString('en-US', {hour:'numeric', minute:'2-digit', weekday:'short'})
+				qArr: JSON.stringify(qArr),
+				dArr: JSON.stringify(dArr),
+				iArr: JSON.stringify(iArr)
 			});
 		});
 		// console.log(req.cookies);
@@ -115,11 +107,12 @@ module.exports = function(app, passport, Poll) {
 
 		});
 
-		generateID(newPoll);
+		generateID(newPoll, res);
+
 	});
 
 
-	function generateID(newPoll) {
+	function generateID(newPoll, res) {
 		var id = "";
 		var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
@@ -136,9 +129,69 @@ module.exports = function(app, passport, Poll) {
 				newPoll.save( (err, newPoll) => {
 					console.log('saving new poll');
 					if (err) return console.error(err);
-					res.redirect('/');
+					else res.redirect('/' + id);
 				});
 			}
 		});
 	}
+
+	// ADD NEW CHOICE
+	app.post('/:id/add', (req, res) => {
+		var choice = req.body.add;
+		Poll.findOneAndUpdate({identifier: {$eq: req.params.id} }, {$push: {choices: choice, votes: 0}}, {safe: true, upsert: true, new : true}, (err, doc) => {
+			if (err) console.error(err);
+			else console.log('Added ' + choice + ' to ' + req.params.id);
+			console.log(doc);
+		});
+		// res.redirect('back'); cant redirect after ajax call, have to do client side
+		res.end();
+	});
+
+	// SUBMIT A VOTE
+	app.post('/:id/vote', (req, res) => {
+		Poll.findOne({identifier: req.params.id}, (err, poll) => {
+
+			if (poll.options[0] === true) { //if I redid this application I would use an object instead of double arrays... d'oh!
+				if (poll.ip.indexOf(req.ip) !== -1) { //if ip has already voted and no duplication allowed, don't process their vote
+					console.log("Duplicate IP"); //FLASH MESSAGE
+					res.end("true");
+					return;
+				} else
+					poll.ip.push(req.ip);
+			}
+
+			if (poll.options[1] === true) { //checkbox system
+				for (var i = 0; i < req.body.vote.length; i++) {
+					poll.votes[poll.choices.indexOf(req.body.vote[i])] += 1;
+				}
+			} else { //radio system
+				poll.votes[poll.choices.indexOf(req.body.vote)] += 1;
+			}
+
+			poll.markModified('votes'); // informs Mongoose that something has changed so it saves it; doesn't check arrays by default?
+		    poll.save(function (err) {
+				if (err) return console.error(err);
+				else console.log('Successful vote.');
+		    });
+		});
+	});
+
+	// VOTING SCREEN
+	app.get('/:id', (req, res) => {
+		Poll.findOne({identifier: req.params.id}, (err, poll) => {
+			res.render('vote.pug', {
+				question: poll.question,
+				cArr: JSON.stringify(poll.choices),
+				oArr: JSON.stringify(poll.options),
+				timestamp: poll.timestamp.toLocaleDateString(),
+				author: poll.author,
+			});
+		});
+	});
+
+	// RESULTS PAGE
+	app.get('/:id/r', (req, res) => {
+		res.end();
+	});
+
 }

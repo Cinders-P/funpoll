@@ -1,0 +1,54 @@
+doctype html
+html(lang="en")
+	include ./head.pug
+	// Custom Sheets
+	link(rel='stylesheet', type='text/css', href='home.css')
+	script(type='text/javascript').
+		var o =!{JSON.stringify(oArr)} //creates a js variable so vote.js can access the options array too -> see: jade interpolation #escaped string !unescaped html
+	script(src='vote.js')
+		
+	body
+		.red
+		.svg
+		.svg
+		.jumbotron.text-xs-center
+			img(src='smiley.png')
+			a(href="/")
+				h1.display-1 funpoll
+			div.bottom
+				a(href='/login') Login
+				span.pad |
+				a(href='/register') Register
+		.container-fluid.no-pad
+				.arrow-up
+				.card.col-xl-4.col-md-6.col-sm-12.trans
+					.alert.alert-danger This IP has already voted.
+
+					h1.display-3=question
+					hr
+					small.text-muted Posted  
+						=timestamp
+						if author !== null
+							|  by 
+							=author
+				
+				-var c = JSON.parse(cArr);
+				-var o = JSON.parse(oArr);
+				
+				.flex-column
+					.flex-row.col-xl-8.col-md-6.col-sm-12
+					form(method='post')
+						each val in c
+							button.form-control.form-control-lg.col-md-3(type='button')=val
+					
+					if (o[2] === true)
+						.form-group.margin-top1
+							.form-group.pull-xs-right
+								input.form-control.form-control-lg(type='text' name='add' placeholder='new choice' required)
+								button.input-group-addon(type='button') +
+				
+					button.btn.btn-danger.btn-lg.col-xs-8.col-md-5.col-xl-2.vote.pull-xs-right(type='button') Results
+					button.btn.btn-danger.btn-lg.col-xs-8.col-md-5.col-xl-2.vote.pull-xs-right(type='button') Submit
+		#footer
+			small.text-muted website created by 
+				a(href="https://www.freecodecamp.com/cinders-p") cinders-p

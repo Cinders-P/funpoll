@@ -1,32 +1,14 @@
 doctype html
 html(lang="en")
-
-	head
-		title Fun Poll
-		meta(char="utf-8")
-		meta(name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=320, height=device-height, target-densitydpi=medium-dpi")
-		meta(http-equiv='x-ua-compatible', content='ie=edge')
-		link(rel="shortcut icon" type="image/png" href="favicon.png")
-		link(href="https://fonts.googleapis.com/css?family=Work+Sans:700" rel="stylesheet") 
-		
-		// Bootstrap
-		link(rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css")
-		link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css', integrity='sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd', crossorigin='anonymous')
-		
-		//- jQuery
-		script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js')
-		script(src='https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.2/js/tether.js')
-		script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js', integrity='sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7', crossorigin='anonymous')
-		
-		// Custom Sheets
-		link(rel='stylesheet', type='text/css', href='home.css')
-		script(src='home.js')
-		
+	include ./head.pug
+	// Custom Sheets
+	link(rel='stylesheet', type='text/css', href='home.css')
+	script(src='home.js')
 	body
 		.red
 		.svg
 		.svg
-		.jumbotron.text-xs-center
+		.jumbotron.text-xs-center.fade-in
 			img(src='smiley.png')
 			a(href="/")
 				h1.display-1 funpoll
@@ -75,36 +57,16 @@ html(lang="en")
 				a.list-group-item#recent(href='#')
 					h4.list-group-item-heading Recent Polls
 
-				a.list-group-item(href='#')
-					p.list-group-item-text.col-lg-10=q0
-					small.text-muted=d0
-				a.list-group-item(href='#')
-					p.list-group-item-text.col-lg-10=q1
-					small.text-muted=d1
-				a.list-group-item(href='#')
-					p.list-group-item-text.col-lg-10=q2
-					small.text-muted=d2
-				a.list-group-item(href='#')
-					p.list-group-item-text.col-lg-10=q3
-					small.text-muted=d3
-				a.list-group-item(href='#')
-					p.list-group-item-text.col-lg-10=q4
-					small.text-muted=d4
-				a.list-group-item(href='#')
-					p.list-group-item-text.col-lg-10=q5
-					small.text-muted=d5
-				a.list-group-item(href='#')
-					p.list-group-item-text.col-lg-10=q6
-					small.text-muted=d6
-				a.list-group-item(href='#')
-					p.list-group-item-text.col-lg-10=q7
-					small.text-muted=d7
-				a.list-group-item(href='#')
-					p.list-group-item-text.col-lg-10=q8
-					small.text-muted=d8
-				a.list-group-item(href='#')
-					p.list-group-item-text.col-lg-10=q9
-					small.text-muted=d9
+				-var q = JSON.parse(qArr);
+				-var d = JSON.parse(dArr);
+				-var i = JSON.parse(iArr);
+				
+				-var n = 0;
+				while n < 10
+					a.list-group-item(href=i[n])
+						p.list-group-item-text.col-lg-10=q[n]
+						small.text-muted=d[n++]
+
 		#footer
 			small.text-muted website created by 
 				a(href="https://www.freecodecamp.com/cinders-p") cinders-p
