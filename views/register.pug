@@ -1,40 +1,68 @@
 doctype html
 html(lang="en")
+	include ./head.pug
+	// Custom Sheets
+	link(rel='stylesheet', type='text/css', href='home.css')
+	script.
+		$('html, body').css('overflow-y', 'visible');
 
-head
-	title Fun Poll
-	meta(char="utf-8")
-	meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
-	meta(http-equiv='x-ua-compatible', content='ie=edge')
-
-	// Bootstrap
-	link(rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css")
-	link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css', integrity='sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd', crossorigin='anonymous')
-
+	
 body
-	.container
-		.col-sm-6.col-sm-offset-3(style='margin-top: 80px')
-			h1
-				span.fa.fa-sign-in
-				| Register
+	.red
+	.svg
+	.svg
+	.jumbotron.text-xs-center
+		//- img(src='smiley.png')
+		a(href="/")
+			h1.display-1 funpoll
+	.container-fluid.no-pad
+			.arrow-up
+			.justify-center
+				.card.col-lg-4.col-md-8
 
-			if (message.length > 0)
-				.alert.alert-danger
-					=message
+					if (message.length > 0)
+						.alert.alert-danger
+							=message
 
-			//- login form
-			form(action='/register' method='post')
-				.form-group
-					label Username
-					input.form-control(type='text' name='username')
-				.form-group
-					label Password
-					input.form-control(type='password' name='password')
-				button.btn.btn-warning.btn-lg Register
-			hr
-			
-			p Already have an account? 
-				a(href='/login') Login
-			p Or go 
-				a(href='/') home
-				|.
+					//- login form
+					if register
+						form(action='/register' method='post')
+							.form-group
+								label Username
+								input.form-control(type='text' name='username')
+							.form-group
+								label Password
+								input.form-control(type='password' name='password')
+							if register
+								button.btn.btn-danger.btn-lg.register Register
+							else
+								button.btn.btn-danger.btn-lg.register Login
+					else
+						form(action='/login' method='post')
+							.form-group
+								label Username
+								input.form-control(type='text' name='username')
+							.form-group
+								label Password
+								input.form-control(type='password' name='password')
+							if register
+								button.btn.btn-danger.btn-lg.register Register
+							else
+								button.btn.btn-danger.btn-lg.register Login
+						
+					div 
+						hr
+						
+						if register
+							small.text-muted Already have an account? 
+								a.brown(href='/login') Login <br>
+						else
+							small.text-muted Need an account? 
+								a.brown(href='/register') Register <br>	
+								
+						small.text-muted  Or go back 
+							a.brown(href='/') home
+							|.
+	#footer
+		small.text-muted website created by 
+			a(href="https://www.freecodecamp.com/cinders-p") cinders-p

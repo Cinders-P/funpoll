@@ -11,13 +11,18 @@ html(lang="en")
 	.svg
 	.svg
 	.jumbotron.text-xs-center
-		img(src='../smiley.png')
+		//- img(src='../smiley.png')
 		a(href="/")
 			h1.display-1 funpoll
-		div.bottom
-			a(href='/login') Login
-			span.pad |
-			a(href='/register') Register
+			.bottom
+				if !loggedIn
+					a(href='/login') Login
+					span.pad |
+					a(href='/register') Register
+				else
+					a(href='/dashboard') Profile
+					span.pad |
+					a(href='/logout') Logout
 	.container-fluid.no-pad
 		.arrow-up
 		.justify-center
@@ -108,3 +113,6 @@ html(lang="en")
 						th 
 							a.brown(href=id) Back to voting
 							
+	#footer
+		small.text-muted website created by 
+			a(href="https://www.freecodecamp.com/cinders-p") cinders-p

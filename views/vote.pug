@@ -12,43 +12,48 @@ html(lang="en")
 		.svg
 		.svg
 		.jumbotron.text-xs-center
-			img(src='smiley.png')
+			//- img(src='smiley.png')
 			a(href="/")
 				h1.display-1 funpoll
-			div.bottom
-				a(href='/login') Login
-				span.pad |
-				a(href='/register') Register
+			.bottom
+				if !loggedIn
+					a(href='/login') Login
+					span.pad |
+					a(href='/register') Register
+				else
+					a(href='/dashboard') Profile
+					span.pad |
+					a(href='/logout') Logout
 		.container-fluid.no-pad
-				.arrow-up
-				.card.col-xl-4.col-md-6.col-sm-12.trans
-					.alert.alert-danger This IP has already voted.
+			.arrow-up
+			.card.col-xl-4.col-md-6.col-sm-12.trans
+				.alert.alert-danger This IP has already voted.
 
-					h1.display-3=question
-					hr
-					small.text-muted Posted  
-						=timestamp
-						if author !== null
-							|  by 
-							=author
+				h1.display-3=question
+				hr
+				small.text-muted Posted  
+					=timestamp
+					if author !== null
+						|  by 
+						=author
+			
+			-var c = JSON.parse(cArr);
+			-var o = JSON.parse(oArr);
+			
+			.flex-column
+				.flex-row.col-xl-8.col-md-6.col-sm-12
+				form(method='post')
+					each val in c
+						button.form-control.form-control-lg.col-md-3(type='button')=val
 				
-				-var c = JSON.parse(cArr);
-				-var o = JSON.parse(oArr);
-				
-				.flex-column
-					.flex-row.col-xl-8.col-md-6.col-sm-12
-					form(method='post')
-						each val in c
-							button.form-control.form-control-lg.col-md-3(type='button')=val
-					
-					if (o[2] === true)
-						.form-group.margin-top1
-							.form-group.pull-xs-right
-								input.form-control.form-control-lg(type='text' name='add' placeholder='new choice' required)
-								button.input-group-addon(type='button') +
-				
-					button.btn.btn-danger.btn-lg.col-xs-8.col-md-5.col-xl-2.vote.pull-xs-right(type='button') Results
-					button.btn.btn-danger.btn-lg.col-xs-8.col-md-5.col-xl-2.vote.pull-xs-right(type='button') Submit
-		#footer
-			small.text-muted website created by 
-				a(href="https://www.freecodecamp.com/cinders-p") cinders-p
+				if (o[2] === true)
+					.form-group.margin-top1
+						.form-group.pull-xs-right
+							input.form-control.form-control-lg(type='text' name='add' placeholder='new choice' required)
+							button.input-group-addon(type='button') +
+			
+				button.btn.btn-danger.btn-lg.col-xs-8.col-md-5.col-xl-2.vote.pull-xs-right(type='button') Results
+				button.btn.btn-danger.btn-lg.col-xs-8.col-md-5.col-xl-2.vote.pull-xs-right(type='button') Submit
+	#footer
+		small.text-muted website created by 
+			a(href="https://www.freecodecamp.com/cinders-p") cinders-p

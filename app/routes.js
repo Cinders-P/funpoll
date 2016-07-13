@@ -12,10 +12,14 @@ module.exports = function(app, passport, Poll) {
 				dArr.push(polls[z].timestamp.toLocaleDateString('en-US', {hour:'numeric', minute:'2-digit', weekday:'short'}));
 			}
 
+
+			var loggedIn = (req.isAuthenticated()) ? true : false
+
 			res.render('index.pug', {
 				qArr: JSON.stringify(qArr),
 				dArr: JSON.stringify(dArr),
-				iArr: JSON.stringify(iArr)
+				iArr: JSON.stringify(iArr),
+				loggedIn: loggedIn
 			});
 		});
 		// console.log(req.cookies);
@@ -25,7 +29,10 @@ module.exports = function(app, passport, Poll) {
 	app.get('/login', (req, res, next) => {
 		(req.isAuthenticated()) ? res.redirect('/dashboard') : next();
 	}, (req, res) => {
-		res.render('login.pug', { message: req.flash('loginMessage')});
+		res.render('register.pug', {
+			message: req.flash('loginMessage'),
+			register: false
+		});
 	});
 
 	app.post('/login', passport.authenticate('local-login', {
@@ -44,18 +51,35 @@ module.exports = function(app, passport, Poll) {
 	app.get('/register' , (req, res, next) => {
 		(req.isAuthenticated()) ? res.redirect('/dashboard') : next();
 	}, (req, res) => {
-		res.render('register.pug', { message: req.flash('registerMessage')});
+		res.render('register.pug', {
+			message: req.flash('registerMessage'),
+			register: true
+		});
 	});
 
 	// PROFILE
 	app.get('/dashboard', (req, res, next) => {
 		(req.isAuthenticated()) ? next() : res.redirect('/'); //if user is authenticated, head to next middleware
 	}, (req, res) => {
-		console.log(req.user);
-		console.log(req.cookies);
-		console.log(req.session);
-		res.render('dashboard.pug', {
-			user: req.user.local.username
+		var qArr = [];
+		var iArr = [];
+		Poll.find({ author: req.user.local.username }, 'question identifier', (err, docs) => {
+			if (docs[0] != null) { //if some document was returned
+				for (var i = 0; i < docs.length; i++) {
+					qArr.push(docs[i].question);
+					iArr.push(docs[i].identifier);
+
+				}
+				res.render('dashboard.pug', {
+					hasPoll: true,
+					qArr: JSON.stringify(qArr),
+					iArr: JSON.stringify(iArr)
+				});
+			} else {
+				res.render('dashboard.pug', {
+					hasPoll: false
+				});
+			}
 		});
 	});
 
@@ -179,6 +203,7 @@ module.exports = function(app, passport, Poll) {
 
 	// VOTING SCREEN
 	app.get('/:id', (req, res) => {
+		var loggedIn = (req.isAuthenticated()) ? true : false
 		Poll.findOne({identifier: req.params.id}, (err, poll) => {
 			res.render('vote.pug', {
 				question: poll.question,
@@ -186,20 +211,45 @@ module.exports = function(app, passport, Poll) {
 				oArr: JSON.stringify(poll.options),
 				timestamp: poll.timestamp.toLocaleDateString(),
 				author: poll.author,
+				loggedIn: loggedIn
 			});
 		});
 	});
 
 	// RESULTS PAGE
 	app.get('/:id/r', (req, res) => {
+		var loggedIn = (req.isAuthenticated()) ? true : false
 		Poll.findOne({identifier: req.params.id}, (err, poll) => {
 			res.render('results', {
 				question: poll.question,
 				choices: poll.choices,
 				votes: poll.votes,
-				id: '/' + req.params.id
+				id: '/' + req.params.id,
+				loggedIn: loggedIn
 			});
 		});
+	});
+
+	// DELETE A POLL
+	app.post('/delete', (req, res) => {
+		if (!req.isAuthenticated())
+			res.end(); //user is not logged in!
+		else {
+			var author = req.user.local.username;
+
+			Poll.findOne({identifier: req.body.delete}, (err, doc) => {
+				if (err) {
+					console.log(err);
+					res.end();
+				} else {
+					if (author === doc.author) { //check if they are logged in as the right person
+						console.log('Deleting ' + doc.question );
+						doc.remove();
+					}
+					res.end();
+				}
+			});
+		}
 	});
 
 }

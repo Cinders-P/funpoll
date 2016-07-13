@@ -224,17 +224,18 @@ input:focus
 	box-shadow: 0 0 10px rgba(191, 51, 80, 0.3)
 	border: 1px solid rgba(92, 67, 54, 0.5) !important
 
-img[src='smiley.png']
-	position:absolute
-	margin-top:10px
-	transform: rotate(-10deg)
-	margin-left: -270px
+// img[src='../smiley.png'],
+// img[src='smiley.png']      OLD SMILEY
+// 	position:absolute
+// 	margin-top:10px
+// 	transform: rotate(-10deg)
+// 	margin-left: -270px
 
-img[src='../smiley.png']
-	position:absolute
-	margin-top:10px
-	transform: rotate(-10deg)
-	margin-left: -270px
+// img[src='smiley.png']   SEED SMILEY
+// 	position: absolute
+// 	width: 110px
+// 	filter brightness(0.8)
+
 
 .list-group
 	margin-right:0
@@ -264,6 +265,9 @@ img[src='../smiley.png']
 		width: 85vw
 	.pull-xs-right
 		margin-right: 0
+
+.register
+	width: 200px
 
 div.arrow-up
 	height:0
@@ -297,5 +301,48 @@ table
 
 .brown
 	color: rgba(#4d3f2b, 0.8)
-.brown:hover
+.brown:hover,
+.brown:visited,
+.brown:focus,
+.brown:active,
 	color: rgba(#4d3f2b, 0.6)
+	text-decoration: none
+
+.delete
+	color:red
+	opacity: 0.5
+	position absolute
+	font-size: 2rem
+	right: 0
+	transform: translate(-100%, -20%)
+	z-index 4
+.delete:hover
+	opacity: 0.8
+	color red
+
+.modal
+	position fixed
+	top: 25%
+
+.modal-header
+	margin-bottom: 0
+	padding-bottom: 0
+	border-bottom: 0
+
+.modal-footer
+	border: 0
+
+.modal-body
+	padding: 10px 40px 0 40px
+
+#no
+	font-size: 20px
+	padding:8px
+	width: 70px
+	margin-top:20px
+	border-radius: 0
+	transition: background-color 0.2s ease
+	max-height: 60px
+
+#del
+	width: 70px

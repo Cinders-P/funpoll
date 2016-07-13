@@ -1,31 +1,86 @@
 doctype html
 html(lang="en")
-
-head
-	title Fun Poll
-	meta(char="utf-8")
-	meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
-	meta(http-equiv='x-ua-compatible', content='ie=edge')
+	include ./head.pug
+	// Custom Sheets
+	link(rel='stylesheet', type='text/css', href='home.css')
+	script(src='dashboard.js')
 	
-	// Bootstrap
-	link(rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css")
-	link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css', integrity='sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd', crossorigin='anonymous')
+	body 
+		.modal.fade.bd-example-modal-sm(tabindex='-1', role='dialog', aria-labelledby='mySmallModalLabel', aria-hidden='true')
+			.modal-dialog.modal-sm
+				.modal-content
+					.modal-header
+						button.close(type='button', data-dismiss='modal', aria-label='Close')
+							span(aria-hidden='true') &times;
+					.modal-body Are you sure you want to delete this poll?
+					.modal-footer
+						button.btn.btn-secondary#no(type='button', data-dismiss='modal') No
+						button.btn.btn-primary.btn-danger#del(type='button') Yes
 
-body
-	.container
-		.page-header.text-center
-			h1
-			span.fa.fa-anchor
-			|  Profile Page
-		a.btn.btn-default.btn-sm(href='/logout') Logout
-		.row
-		// LOCAL INFORMATION
-		.col-sm-6
-			.well
-				h3
-					span.fa.fa-user
-					|  Local
-				p
-					strong id
-					| : 
-					=user
+		.red
+		.svg
+		.svg
+		.jumbotron.text-xs-center
+			//- -var e = 0
+			//- while e++ < 11
+			//- 	img(src='smiley.png' id='s'+ e)
+			a(href="/")
+				h1.display-1 funpoll
+			div.bottom
+				a(href='/') Home
+				span.pad |
+				a(href='/logout') Logout
+		.container-fluid
+			.arrow-up
+			.card.col-xl-4.col-md-6.col-sm-12
+				form(action='/new' method='post' onsubmit='return stripEmpty()')
+					.form-group#question
+						label Question
+						input.form-control-lg.form-control(type='text' name='question' required)
+					hr
+					.form-group#choices
+						label Choices
+						.form-group
+							.input-group-addon 1
+							input.form-control.form-control-lg(type='text' name='0')
+						.form-group
+							.input-group-addon 2
+							input.form-control.form-control-lg(type='text' name='1')
+						.form-group
+							.input-group-addon 3
+							input.form-control.form-control-lg(type='text' name='2')
+					hr
+					#form-footer
+						div
+							.checkbox
+								label
+									input(type='checkbox' value='true' name='ip')
+									small.text-muted Check for IP duplication
+									
+							.checkbox
+								label
+									input(type='checkbox' value='true' name='mc')
+									small.text-muted Allow multiple answers
+							.checkbox
+								label
+									input(type='checkbox' value='true' name='cus')
+									small.text-muted Allow answer creation
+						button.btn.btn-danger.btn-lg.col-xs-5 Submit
+
+			.list-group.col-xl-7.col-xl-offset-1.col-md-6.col-sm-12
+				a.list-group-item#recent(href='#')
+					h4.list-group-item-heading Your polls
+
+				if hasPoll
+					-var q = JSON.parse(qArr);
+					-var i = JSON.parse(iArr);
+					
+					each val, index in q
+						a.list-group-item(href=i[index])
+							p.list-group-item-text.col-lg-11=val
+							button.close.delete.pull-xs-right(name=i[index] type="button" aria-label="Close" data-toggle='modal', data-target='.bd-example-modal-sm')
+								span(aria-hidden="true") &times;
+
+		#footer
+			small.text-muted website created by 
+				a(href="https://www.freecodecamp.com/cinders-p") cinders-p

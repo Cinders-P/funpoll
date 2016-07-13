@@ -9,13 +9,18 @@ html(lang="en")
 		.svg
 		.svg
 		.jumbotron.text-xs-center.fade-in
-			img(src='smiley.png')
+			//- img(src='smiley.png')
 			a(href="/")
 				h1.display-1 funpoll
 			div.bottom
-				a(href='/login') Login
-				span.pad |
-				a(href='/register') Register
+				if !loggedIn
+					a(href='/login') Login
+					span.pad |
+					a(href='/register') Register
+				else
+					a(href='/dashboard') Profile
+					span.pad |
+					a(href='/logout') Logout
 		.container-fluid
 			.arrow-up
 			.card.col-xl-4.col-md-6.col-sm-12.fade-in
